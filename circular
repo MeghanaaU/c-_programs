@@ -1,0 +1,74 @@
+#include <stdio.h>
+#define MAX 5
+
+void insert_rear(int q[], int *rear, int *count, int item) {
+    if (*count >= MAX) {
+        printf("Queue is full\n");
+    } else {
+        *rear = (*rear + 1) % MAX;
+        q[*rear] = item;
+        (*count)++;
+    }
+}
+
+int delete_front(int q[], int *front, int *count) {
+    if (*count == 0) {
+        printf("Queue is empty\n");
+        return -1;
+    } else {
+        int del_item = q[*front];
+        *front = (*front + 1) % MAX;
+        (*count)--;
+        return del_item;
+    }
+}
+
+void display(int q[], int *front, int *count) {
+    if (*count == 0) {
+        printf("Queue is empty\n");
+    } else {
+        printf("Queue elements: ");
+        for (int i = 0; i < *count; i++) {
+            printf("%d ", q[(*front + i) % MAX]);
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    int q[MAX];
+    int front = 0, rear = -1, count = 0, item, choice, del_item;
+
+    do {
+        printf("Enter your choice  ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter the value to be inserted: ");
+                scanf("%d", &item);
+                insert_rear(q, &rear, &count, item);
+                break;
+
+            case 2:
+                del_item = delete_front(q, &front, &count);
+                if (del_item != -1) {
+                    printf("Deleted item: %d\n", del_item);
+                }
+                break;
+
+            case 3:
+                display(q, &front, &count);
+                break;
+
+            case 0:
+                printf("Exiting...\n");
+                break;
+
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    } while (choice != 0);
+
+    return 0;
+}
