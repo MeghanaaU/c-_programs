@@ -1,0 +1,78 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+#define MAX 100
+double stack[MAX];
+int top = -1;
+
+void push(double item) {
+    if (top == MAX - 1) {
+        printf("\nStack is Full!\n");
+    } else {
+        stack[++top] = item;
+    }
+}
+
+double pop() {
+    if (top == -1) {
+        printf("\nStack is Empty!\n");
+        exit(1);
+    }
+    return stack[top--];
+}
+
+int main() {
+    char postfix[100];
+    int i;
+    double ans;
+
+    printf("\nEnter the postfix expression: ");
+    scanf("%s", postfix);
+
+    for (i = 0; postfix[i] != '\0'; i++) {
+        char ch = postfix[i];
+
+        if (isdigit(ch)) {
+            
+            push(ch - '0');
+        } else {
+            double item1, item2;
+            switch (ch) {
+                case '+':
+                    item1 = pop();
+                    item2 = pop();
+                    push(item2 + item1);
+                    break;
+                case '-':
+                    item1 = pop();
+                    item2 = pop();
+                    push(item2 - item1);
+                    break;
+                case '*':
+                    item1 = pop();
+                    item2 = pop();
+                    push(item2 * item1);
+                    break;
+                case '/':
+                    item1 = pop();
+                    item2 = pop();
+                    if (item1 == 0) {
+                        printf("\nError: Division by zero!\n");
+                        exit(1);
+                    }
+                    push(item2 / item1);
+                    break;
+                default:
+                    printf("\nInvalid character in expression: %c\n", ch);
+                    exit(1);
+            }
+        }
+    }
+
+    ans = pop();
+    printf("\nThe evaluation result: %f\n", ans);
+    return 0;
+}
+
+
