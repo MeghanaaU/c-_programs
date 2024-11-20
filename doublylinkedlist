@@ -1,0 +1,110 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* prev;
+    struct Node* next;
+};
+
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->prev = NULL;
+    newNode->next = NULL;
+    return newNode;
+}
+
+void createList(struct Node** head, int data) {
+    struct Node* newNode = createNode(data);
+    if (*head == NULL) {
+        *head = newNode;
+    } else {
+        struct Node* temp = *head;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+        newNode->prev = temp;
+    }
+}
+
+
+void insertLeft(struct Node** head, int value, int newData) {
+    struct Node* temp = *head;
+    while (temp != NULL && temp->data != value) {
+        temp = temp->next;
+    }
+    if (temp == NULL) {
+        printf("Node with value %d not found.\n", value);
+        return;
+    }
+    struct Node* newNode = createNode(newData);
+    newNode->next = temp;
+    newNode->prev = temp->prev;
+
+    if (temp->prev != NULL) {
+        temp->prev->next = newNode;
+    } else {
+        *head = newNode;
+    }
+    temp->prev = newNode;
+}
+
+void deleteNode(struct Node** head, int value) {
+    struct Node* temp = *head;
+
+    while (temp != NULL && temp->data != value) {
+        temp = temp->next;
+    }
+    if (temp == NULL) {
+        printf("Node with value %d not found.\n", value);
+        return;
+    }
+
+    if (temp->prev != NULL) {
+        temp->prev->next = temp->next;
+    } else {
+        *head = temp->next;
+    }
+    if (temp->next != NULL) {
+        temp->next->prev = temp->prev;
+    }
+
+    free(temp);
+    printf("Node with value %d deleted.\n", value);
+}
+void display(struct Node* head) {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    struct Node* temp = head;
+    printf("Doubly linked list: ");
+    while (temp != NULL) {
+        printf("%d <-> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+
+int main() {
+    struct Node* head = NULL;
+
+        createList(&head, 15);
+    createList(&head, 32);
+    createList(&head, 45);
+    display(head);
+
+
+    printf("Inserting 23 to the left of 32:\n");
+    insertLeft(&head, 32, 23);
+    display(head);
+
+      printf("Deleting node with value 32:\n");
+    deleteNode(&head, 32);
+    display(head);
+
+    return 0;
+}
