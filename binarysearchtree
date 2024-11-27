@@ -1,0 +1,96 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
+
+struct Node* createNode(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (newNode == NULL) {
+        printf("Memory allocation failed\n");
+        exit(1);
+    }
+    newNode->data = value;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
+}
+
+
+struct Node* insertNode(struct Node* root, int value) {
+
+    if (root == NULL) {
+        return createNode(value);
+    }
+
+
+    if (value < root->data) {
+        root->left = insertNode(root->left, value);
+    } else if (value > root->data) {
+        root->right = insertNode(root->right, value);
+    }
+
+    return root;
+}
+
+void inorderTraversal(struct Node* root) {
+    if (root != NULL) {
+        inorderTraversal(root->left);
+        printf("%d ", root->data);
+        inorderTraversal(root->right);
+    }
+}
+
+
+void preorderTraversal(struct Node* root) {
+    if (root != NULL) {
+        printf("%d ", root->data);
+        preorderTraversal(root->left);
+        preorderTraversal(root->right);
+    }
+}
+
+
+void postorderTraversal(struct Node* root) {
+    if (root != NULL) {
+        postorderTraversal(root->left);
+        postorderTraversal(root->right);
+        printf("%d ", root->data);
+    }
+}
+
+
+int main() {
+    struct Node* root = NULL;
+    int value, choice;
+
+
+    printf("Enter values to insert into the BST (enter -1 to stop):\n");
+    while (1) {
+        printf("Enter value: ");
+        scanf("%d", &value);
+
+        if (value == -1) {
+            break;
+        }
+
+        root = insertNode(root, value);
+    }
+
+
+    printf("\nIn-order Traversal: ");
+    inorderTraversal(root);
+
+    printf("\nPre-order Traversal: ");
+    preorderTraversal(root);
+
+    printf("\nPost-order Traversal: ");
+    postorderTraversal(root);
+
+
+
+    return 0;
+}
